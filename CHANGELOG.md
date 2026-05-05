@@ -5,13 +5,21 @@ Toutes les modifications notables visibles pour les utilisateurs sont documenté
 ## [1.4.0] - 2026-05-05
 
 ### Nouvelles fonctionnalités
-- **Commandes adaptées au type de véhicule** : lors de la découverte, le plugin détecte automatiquement si le véhicule est électrique ou thermique. Les commandes non pertinentes sont masquées (ex. : *Batterie*, *Prise*, *Charge* restent cachées sur un thermique ; *Autonomie carburant* est cachée sur un électrique).
+- **Commandes adaptées au type de véhicule** : lors de la découverte, le plugin détecte automatiquement si le véhicule est électrique, hybride ou thermique. Les commandes non pertinentes sont masquées (ex. : *Batterie*, *Prise*, *Charge* restent cachées sur un thermique ; *Autonomie carburant* est cachée sur un électrique).
 
 ### Améliorations
-- **Synchronisation jusqu'à 5× plus rapide** : les 5 appels API par véhicule (batterie, cockpit, HVAC, position, mode de charge) sont désormais exécutés en parallèle au lieu de l'être séquentiellement.
+- **Synchronisation jusqu'à 5× plus rapide** : les 5 appels API par véhicule (batterie, cockpit, HVAC, position, mode de charge) sont désormais exécutés en parallèle au lieu de l'être séquentiellement. Testé en production : 4 véhicules synchronisés en ~2 secondes.
 - **Réessai automatique** : si un appel API échoue pour une raison réseau transitoire, le plugin retente automatiquement une fois avant de signaler l'erreur.
 - **Page de configuration encore plus rapide** : suppression des appels réseau supplémentaires déclenchés à chaque sauvegarde d'équipement.
 - **Stabilité** : correction d'une erreur rare au chargement si un véhicule n'avait pas d'image associée dans l'API.
+- **Détection hybride améliorée** : les véhicules full-hybrid (ex. Dacia Bigster HEV) sont correctement classifiés via le champ `engineEnergyType` de l'API.
+
+### Validé en production avec les véhicules suivants
+| Modèle | Type | Résultat |
+|---|---|---|
+| Dacia Spring (×2) | Électrique | ✅ Batterie, autonomie, position |
+| Dacia Bigster HEV | Hybride full | ✅ Cockpit + position (battery endpoint non supporté, normal) |
+| Dacia Duster Diesel | Thermique | ✅ Privacy mode détecté, warnings propres |
 
 ---
 
