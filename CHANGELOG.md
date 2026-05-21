@@ -2,6 +2,21 @@
 
 Toutes les modifications notables visibles pour les utilisateurs sont documentées ici.
 
+## [1.4.2] - 2026-05-22
+
+### Petit ajustement technique
+
+Optimisation de la mécanique d'auto-fetch introduite en 1.4.1 : la récupération des clés API depuis `hacf-fr/renault-api` se faisait à chaque ré-authentification (≈ toutes les 10 minutes) au lieu d'une fois par jour comme prévu. Aucun impact fonctionnel — toutes les données continuaient de remonter normalement — mais c'était du bruit inutile dans les logs.
+
+Désormais le fetch s'exécute :
+- **Une fois à l'installation** du plugin,
+- **Une fois à chaque mise à jour** depuis le Market (donc cette MAJ resynchronise immédiatement vos clés),
+- **Une fois par jour** à 4 h du matin via la tâche `cronDaily`.
+
+Aucune action requise après la mise à jour.
+
+---
+
 ## [1.4.1] - 2026-05-21
 
 ### Correctif critique — données qui ne remontaient plus
