@@ -2,6 +2,26 @@
 
 Toutes les modifications notables visibles pour les utilisateurs sont documentées ici.
 
+## [1.4.1] - 2026-05-21
+
+### Correctif critique — données qui ne remontaient plus
+
+Depuis le 20 mai 2026 au soir, plus aucune donnée véhicule (batterie, autonomie, position, kilométrage…) ne remontait dans Jeedom : les logs affichaient en boucle `err.func.wired.unauthorized` sur tous les endpoints. La cause est externe au plugin : Renault/Dacia a tourné une de ses clés d'authentification (clé Gigya), et celle embarquée dans le plugin n'était plus acceptée. Cette version restaure le service.
+
+### Amélioration durable — résilience aux futures rotations de clés
+
+Pour éviter que le même incident reproduise une coupure de plusieurs jours en attendant une mise à jour Market, le plugin va désormais **récupérer automatiquement les clés API à jour** depuis le projet de référence [hacf-fr/renault-api](https://github.com/hacf-fr/renault-api) une fois par jour (lors de la synchronisation quotidienne à 4 h du matin). Si Renault tourne à nouveau une clé, le plugin s'auto-corrige sous 24 h sans aucune action de votre part et sans nouvelle release.
+
+En cas d'indisponibilité réseau au moment du fetch, le plugin conserve simplement la clé précédente — aucun risque de cassure liée à la nouvelle mécanique.
+
+### Action requise après la mise à jour
+
+1. Mettre à jour le plugin depuis le Market Jeedom.
+2. (Facultatif, pour un retour à la normale immédiat) Aller dans **Réglages → Système → Tâches cron** et lancer manuellement `MyDACIA::cronDaily` ; sinon, attendre la prochaine exécution à 4 h.
+3. Vérifier que les données remontent au cycle suivant (`MyDACIA::cron5`, toutes les 5 min) dans **Analyse → Logs → MyDACIA** : les `err.func.wired.unauthorized` doivent disparaître.
+
+---
+
 ## [1.4.0] - 2026-05-05
 
 ### Nouvelles fonctionnalités
